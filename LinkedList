@@ -1,0 +1,107 @@
+/* The class LinkedList implements our interface of List, and functions a lot like the 
+ * DataCollection
+ * Here in this class we also have our Nodes class (with it's own fancy constructor) 
+ * It only needs two total parts Node which points to next, and Words value (which holds a value of 
+ * the word)
+ * 
+ */
+public class LinkedList implements List {
+	
+	
+	public Node head; //head, this begins our linked list
+
+	@Override
+	public void add(Words words) {  //adds Words words, from the list class.
+		head = new Node(head,words);  
+	}
+
+	@Override
+	public boolean isEmpty() {   //a boolean expression to check if the list is empty
+		return head == null;
+	}
+
+	@Override
+	public Words get(int index) {  //getter method
+		Node current = head;  // variable to keep track of the current Node
+		for(int i=1; i <= index; i++) {   //for the length of the index
+			current = current.next;  //increment current as current.next
+		}
+		return current.value;   // return the value (the word inside) current
+	}
+
+	@Override
+	public void set(int index, Words words) {  //goes along with the getter method. It sets stuff
+		Node current = head;  // also has the public instance variable of current
+		for(int i=1; i <= index; i++) {   // for the length of i to the length of the index
+			current = current.next;   //reset current to be the current.next (the next in line)
+		}
+		current.value = words;  //will set the value of current, to it's value in words.
+	}
+	/* Our nested nodes class! Yay!
+	 * It's a lot like the node class from our last class
+	 * It creates node next (which we will use to move one down the list
+	 * and Words value, which holds the value of the word linked in that node.
+	 * 
+	 * 
+	 */
+	private class Node {
+		Node next;
+		Words value;
+		/**
+		 * @param next
+		 * @param value
+		 */
+		public Node(Node next, Words value) { // our constructor, recieves next, and value
+			super();  
+			this.next = next;
+			this.value = value;
+		}
+		
+	}
+	
+	public static Words[] arrayOf(Words...words){
+		return words;
+		
+	}
+	
+	/* This was all for testing purposes. Please disregard. :)
+	 * 
+	 * 
+	public static void main(String[] args) {
+		test();
+	}
+
+	private static void test() {
+		LinkedList listy = new LinkedList();
+		assert(listy.head == null);
+		
+		Words words = new Words("mmmmm","bop");
+		listy.add(words);
+		assert(listy.head != null);
+		assert(listy.head.value == words);
+		assert(listy.head.next == null);
+		
+		
+		listy = new LinkedList();
+		
+		for(int i=0; i<10; i++) {
+			listy.add(new Words("i=", "" + i));
+			System.out.println("adding:" + i);
+		}
+		
+		for(int i=0; i<10; i++) {
+			System.out.println("Getting " + listy.get(i).getFrenchWords());
+		}
+		
+		for(int i=0; i<10; i++) {
+			listy.set(i, new Words("sheep","bahhh"));
+			System.out.println(listy.get(i).getFrenchWords());
+		}
+	}
+	*/
+
+}
+//Vague code notes. Also please disregard.
+//head.value;
+//word second = head.next.value
+//word third = head.next.next.value
