@@ -1,0 +1,153 @@
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+/**
+ * This is the button class, which is actually used to set up the buttons, which is the whole point in the game.
+ * It sets up a general button, with unspecified constructors for use in the games class, which will be used to create
+ * the english word, and the four buttons the user word choices, next word and need help button. 
+ * @author shannonmoocow
+ *
+ */
+public class Button {
+
+	/**
+	 * The Button class, creates a general button, which we will use to create 7
+	 * different variations of a button, 4 french words, 1 english word (technically a button, though
+	 * it is unclickable), a need help button, and a next word button.
+	 * 
+	 */
+
+	/**
+	 * This button creates the button, with an unknown label
+	 * unknown color, and unspecified location. I
+	 */
+	public Button(String someLabel,
+			Color someColor,
+			int someX, int someY,
+			int someWidth, int someHeight)
+	{									
+		setup(someLabel,					
+				someColor,					
+				someX, someY,				
+				someWidth, someHeight);		
+	}
+
+	/**
+	 * This method initializes a set of buttons with brand new coordinates. It
+	 * starts being listed with no given coordinates,which will be placed in
+	 * later, and starts off with up = false, meaning that the button is 
+	 * "unclicked" and in it's dark "down" state.
+	 */
+	public void setup(String someLabel,
+			Color someColor,
+			int someX, int someY,
+			int someWidth, int someHeight)
+	{
+		label = someLabel;
+		color = someColor;
+		x = someX;
+		y = someY;
+		width = someWidth;
+		height = someHeight;
+		up = false;								}
+
+	/**
+	 * flip is used only to look to check if the button is clicked
+	 * or unclicked, meaning that is it dark (down) or light(up)
+	 * if it is "up" this method will set it back to the down state
+	 * and if it is down, it will set it to "up"
+	 * a simple if/else method is all that is necessary
+	 * as the button can only be up or down.
+	 */
+	public void flip()
+	{
+		if (up == true) 
+		{
+			up = false;
+		}
+		else            
+		{
+			up = true;
+		}
+
+
+	}
+
+	public void action() {
+
+	}
+
+	/**
+	 * The isInside method takes the someX and someY in the setup method, and 
+	 * only serves to determine if the user click is inside the given 
+	 * width and height of the button, by using the coordinates of each of the 
+	 * 3 buttons we draw, since the coordinates the method is watching are 
+	 * variables, it can watch for all 3 buttons being used in this program.
+	 * A simple if/else statement can also be used here because a click
+	 * is either in or out of the buttons.
+	 */
+	public boolean isInside(int someX, int someY)
+	{
+		if (x < someX && someX < (x + width) && y < someY && someY <(y + height)) // this if statement checks to see if the mouse click is within the size of the buttons.
+		{
+			return true;
+		}
+		else
+		{
+			return false; 
+		}
+	}
+	/**
+	 *	The paint method actually does the painting. I used a Graphics 2D pane
+	 *to set the stroke, as the happy face requires a different stroke, so 
+	 *to get the proper line thickness, I had to call the stroke here as well.
+	 *SPACE is a final variable, which defined the total space between the frame
+	 *and the inside of the button (as the button does have a little edge)
+	 *We set the color of the frame and draw it, and set up a standard button.
+	 *with a color (named later) label (named label) and coordinates (also named later)
+	 *
+	 */
+	public void paint(Graphics pane)
+	{
+		Graphics2D g =(Graphics2D) pane;
+		g.setStroke(new BasicStroke(1));
+
+		final int SPACE = 2;				
+
+
+		pane.setColor(Color.black);			
+		pane.drawRect(x, y, width, height);
+
+		pane.setColor(color);				
+		pane.fill3DRect(x + SPACE, y + SPACE,	
+				width - (2*SPACE - 1),
+				height - (2*SPACE - 1),
+				up);
+
+		pane.setColor(Color.black);			
+
+		int labelWidth = pane.getFontMetrics().stringWidth(label);
+		int labelHeight = pane.getFontMetrics().getAscent();
+		pane.drawString(label,
+				x + (width - labelWidth)/2,
+				y + (height + labelHeight)/2);
+	}
+
+	private String label;					//	Sets a variable to hold a label
+	private Color color;					//  Variable to hold a color
+	private int x, y,						//  Variable to hold x and y coordinates
+	width, height;				//  as well as the size of the button itself
+
+	private boolean up;						//	Previously called variable, determining if
+	//  the buttons are "up" or "down"
+
+	public String getLabel(){
+		return label;
+	}
+
+
+
+}
