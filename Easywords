@@ -1,0 +1,37 @@
+
+public class Easywords extends LinkedList{
+/*This class Easywords holds the easy words in the array
+ * These are basic words and conversational phrases that form the basis
+ * of any French education. This class extends (is a child class) of LinkedList
+ * and is used in the Game class so if the user chooses to play an easy version
+ * of the game the wordList is set to be a new instantiation of Easywords, with
+ * this list of words in it.
+ * 
+ */
+
+	
+	public Easywords() {
+		for(Words words: arrayOf(
+					new Words("excuse me ", "pardon"),
+					new Words("good bye","au revoir" ),
+					new Words("thank you", "merci"),
+					new Words("him", "il"),
+					new Words("she", "elle"),
+					new Words("we","nous"),
+					new Words("I", "je"),
+					new Words("you", "tu"),
+					new Words("hello","bonjour"),
+					new Words("sorry", "de sole"),
+					new Words("father", "pere"),
+					new Words("cousin","cousin(e)"),
+					new Words("brother","frere"),
+					new Words("sister","soeur"),
+					new Words("hello", "bonjour"),
+					new Words("we", "nous"),
+					new Words("house","le maison"))) {
+			add(words);
+		}
+	}
+
+
+}
