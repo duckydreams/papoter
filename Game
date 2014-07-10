@@ -1,0 +1,423 @@
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.*;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+public class Game extends Frame implements MouseListener {
+	private Button wordchoice1, wordchoice2, wordchoice3, wordchoice4;  // variables used for the four french words the user can
+	// choose from
+	private boolean initialization = false; // this variable, when set to true will start the game for the user
+
+	private boolean paintIt = false;  // this variable tells the program it can paint the game, making it visible to the user
+
+	private int xCoord; // a general x coordinate used for the buttons and the bar graph
+	private int yCoord;  // a general y coordinate used for the buttons and the bar graph
+	private String labelName; // a general variable which holds the label for the buttons of the game. 
+
+	private Button userChoice; // a variable to hold the user's selection. Important for checking the user's input
+
+	private String chosenWord;  // the english word randomly selected by the game to be presented to the user
+	private String chosenCompliment;  // the french definition of the chosenWord, which is the correct answer for that round
+	private String randomWord1;  // the variable holding the randomly selected word for the game (in french)
+	private String randomWord2;  // another random word that the user can choose from ( in french)
+	private String randomWord3;  // a third button that the  user can choose from (in french)
+	private Button guessChoice;   // a button holding the chosenWord for that round. This is a button, though it is not active.
+	private Button playAgain;   // chooses a new word and four new french words for the user
+	private BarGraph graph = new BarGraph();  // calls the bargraph class to create a bar graph to hold the user's score.
+	int a;  // a int value which holds a random value for one of the randomly selected word
+	int b;  // a simple int value which holds a random value for the selected word. Used in the math.random
+	int c;  // a simple int value which holds the random value for the selected word.
+	/**
+	 * The a, b, and c, variables are used so that the values of the list chosen for the selected word don't equal the
+	 * chosen word (creating multiple correct answers, one of which will be defined as wrong) and that there are no repeats
+	 * these variables are used in the choosingWords() class, which sets up the whole basic game. 
+	 */
+	int BUTTON_WIDTH = 80;
+	int BUTTON_HEIGHT = 33;
+	private Button helpMe; // sets up the help button, which will not change
+	boolean userResponse;  // checks to see if the user responded to the question
+	private final int NUM_WORDS = 17;  // the length of the array, also used in the choosing words class
+
+	int[] arrayInts;  // starts an array of int values to hold the locations of the buttons, so that it will always be random 
+	private List wordList; // our list of words
+	int level; //difficulty level
+	/**
+	 * The Game() class sets up our list of words, both english and it's french compliment as well as defining what the window
+	 * the user will see looks like, how large it is and gives the user the ability to close the program using the window buttons
+	 * These actual set up of the game in not done here, but in the choosingWords class. These constructors are important for the 
+	 * game, as the list of Words is passed along to multiple classes as it defines the choices the user can pick, the words that
+	 * are chosen to play, and the correct answers. It calls the choosingWords class, and sets up the helpMe and the nextWord buttons
+	 * as these two buttons are static, and don't depend on the particular round of the game.
+	 * These will stay constant so there is no need to keep recalling them like we do with the other buttons.
+	 * It sets the game visible to true so the user can begin to play, initializes it, and implements the mouseListener here
+	 * to prepare for user input.
+	 * Basically the Game class does all the set up work for the beginning of the game that is necessary for the rest of the class
+	 * to properly function.
+	 */
+	public Game() {
+		
+		
+	//wordList is our linkedList which implements the list interface, LinkedList and list, work a lot like
+	//DataCollection and DataOrganizer in our last program. 
+	/* In the main, before the program begins we prompt the user with a question,
+	 * asking if the user wants to play an easy or hard version of the game.
+	 * This expression asks if easySelected is true or false
+	 * If easySelected is true, then wordsList is set equal to EasyWords, which is a list
+	 * of words that are set in the Easywords class.
+	 * 
+	 * If easySelected is false, meaning the user wanted difficult words, than wordsList is
+	 * set equal to DifficultWords, which is a list of words that are set in the DifficultWords
+	 * class.
+	 * 
+	 * This is where our inheritance comes in, we have our LinkedList, which DifficultWords
+	 * and Easywords extends, and they each contain a list of words for the program to use.
+	 */
+	if(main.easySelected){
+		wordList = new Easywords(); //creates a new list of easy word from Easywords class
+	
+		
+	}
+	else{
+		
+		wordList = new DifficultWords (); //creates a new list of hard words from the DifficultWords class
+	
+	}
+	
+	
+		setLocation(50, 50);
+		setTitle("Comment dit en Francais?");
+		setLocation(50, 50);
+		setSize(700, 400);
+		setBackground(Color.white);
+		addWindowListener(new WindowAdapter(){ // makes the three buttons on the top of the pop up window active
+			public void windowClosing(WindowEvent e){
+				System.exit(0);  // lets the user exit the program and close the window by pressing the "x" 
+			}
+		});
+
+
+		choosingWords();
+		playAgain = new Button("Next word", Color.pink, 50, 300, BUTTON_WIDTH,
+				BUTTON_HEIGHT);
+		helpMe = new AlertButton("Need Help?", Color.cyan, 50, 350, BUTTON_WIDTH, BUTTON_HEIGHT);
+
+
+		setVisible(true); // This allows the button to appear
+
+		addMouseListener(this); // creates a mouseListener object for the
+		// buttons
+
+		initialization = true;
+
+	}
+	// this is our List class, which recieves a list of Words called words (the one we created in the constructor)
+	private List words(Words ... words) { 
+		List list = new LinkedList(); /* new List Implementation () */
+		for(Words word : words) {
+			list.add(word);
+		}
+		return list;
+	}
+	
+	/**
+	 * the buttonShade class creates three random integers to create an RGB color. Since these three numbers are randomly
+	 * assigned each button would be a different color. It was found in the original testing of the program, that the button
+	 * colors being static, meant that the correct answer would always be purple. This is unacceptable because it means that it 
+	 * isn't truly equal, and the user could simply pick purple without actually knowing the correct word, defeating the purpose
+	 * of the whole game.
+	 * By creating the buttonShade we create an individual color for each of the 4 guess buttons so it will truly be random.
+	 * Although a value of 256 is needed for each RGB value, I set the random value to 100, and simply added 156 to each value 
+	 * in order to create the 256. Restricting the color value to 100, creates lighter colors making it more visually pleasing
+	 * and ensures that the user will always be able to read the labels (as darker colors make it somewhat harder to read)
+	 * 
+	 */
+	public Color buttonShade(){
+		int green = (int) (Math.random() * 100);
+		int blue= (int) (Math.random() * 100);
+		int red = (int) (Math.random() * 100);
+		Color buttonShade = new Color(red + 156, green +156, blue +156);
+		return buttonShade;
+
+	}
+	/**
+	 * The choosingWords class does the actual work of creating the values that the user sees. Here is where the values
+	 * of a, b, and  c come in handy. They are set to -1, because they hold the list values, and list 0 actually holds a value
+	 * and setting it to zero means that array 0 would never be chosen by the function. Instead sitting it to -1 fixes this
+	 * issue.
+	 * Creating three separate a,b,c  values ensures that none of them are equal to the chosen word (i) or to each other. 
+	 * setting up the arrayInts creates an array with 4 values for the x coordinates of the buttons so the buttons in addition
+	 * to being random words and colors will also be placed in different locations, so that the correct answer will always be
+	 * in a different location.
+	 * I chose to use an array here, as it was easier and more straight forward to use the functionality
+	 * of an array here rather than forcing a linked list. The important functionality with the words
+	 * are in linked list form. 
+	 */
+	public void choosingWords() {
+		int i = (int) (Math.random() * NUM_WORDS);
+		a = -1;
+		b = -1;
+		c = -1;
+		userResponse = false;  // allows the user the register an answer, to prevent a user from answering the same question
+		// multiple times. 
+		chosenWord = wordList.get(i).getEnglishWords(); //gets i from wordList, using getEnglish Words		
+		chosenCompliment = wordList.get(i).getFrenchWords(); 
+		while (a < 0 || a == i)
+			a = (int) (Math.random() * NUM_WORDS);
+		randomWord1 = wordList.get(a).getFrenchWords();  //picks word "a" from the wordList randomly
+		while (b < 0 || b == i || b == a)
+			b = (int) (Math.random() * NUM_WORDS);  // picks word "b" from the wordList randomly
+		randomWord2 = wordList.get(b).getFrenchWords();
+		while (c < 0 || c == i || c == a || c == b)
+			c = (int) (Math.random() * NUM_WORDS); //picks word "c" from the wordList randomly
+		randomWord3 = wordList.get(c).getFrenchWords();
+		
+		
+
+		arrayInts = new int[4]; // an Array of ints to hold the x coordinates of the 4 french word buttons
+		arrayInts[0] = 50;
+		arrayInts[1] = 200;
+		arrayInts[2] = 350;
+		arrayInts[3] = 500;
+
+		for (int j = 0; j <= 3; j++) {
+			int newIndex = (int) (Math.random() * 4);
+
+			int temp = arrayInts[j];
+			arrayInts[j] = arrayInts[newIndex]; //sets the array value at j to the word it will hold.
+			arrayInts[newIndex] = temp;  // creates a temporary value, to avoid overwriting the previous value.
+		}
+
+
+		wordchoice1 = new Button(wordList.get(a).getFrenchWords(), buttonShade(), // creates a button for the user to choose
+				arrayInts[0], 200, BUTTON_WIDTH, BUTTON_HEIGHT);
+		wordchoice2 = new Button(wordList.get(b).getFrenchWords(), buttonShade(),  // creates a button for the user to choose
+				arrayInts[1], 200, BUTTON_WIDTH, BUTTON_HEIGHT);
+		wordchoice3 = new Button(wordList.get(c).getFrenchWords(), buttonShade(),  // creates a button for the user to choose
+				arrayInts[2], 200, BUTTON_WIDTH, BUTTON_HEIGHT);                 // creates a button for the user to choose
+		wordchoice4 = new Button(chosenCompliment,buttonShade(), arrayInts[3],   // this will be the correct word.
+				200, BUTTON_WIDTH, BUTTON_HEIGHT);                               
+		guessChoice = new Button(chosenWord, Color.cyan, 225, 100,                // creates an inactive button to present 
+				200,33);                                                         // the english word to the user.
+
+	}
+	/**
+	 * This method only registers the user's mouse location, and registers when the user's mouse comes into the game window
+	 * it does nothing else. All the other mouse work is done by the click, press and release events. 
+	 */
+	public void mouseEntered(MouseEvent event) {
+
+	}
+
+	/**
+	 * The mouseExited() method registers when the user's mouse leaves the
+	 * window, and does nothing else.
+	 */
+	public void mouseExited(MouseEvent event) {
+
+	}
+
+	/**
+	 * the mousePressed button is called by the user's mouse click, it triggers
+	 * the xCoord and yCoord variables and defines them using them using the x
+	 * and y coordinates from the mouse event. The if statement used in the
+	 * mousePressed will see if the x and y coordinates gathered from the mouse
+	 * click are in the coordinated for the word buttons, or the next word, or the need help buttons
+	 * buttons. It doesn't activate the actions done by these buttons, just
+	 * flips them, coloring them lighter if the person clicked It then repaints
+	 * the buttons to reflect the change in the buttons. The actual actions performed by the buttons are done by the 
+	 * mouse clicked method. 
+	 */
+
+	public void mousePressed(MouseEvent event) {
+		xCoord = event.getX();   // gets the coordinates for where the user pressed their mouse
+		yCoord = event.getY();
+
+		if (wordchoice1.isInside(xCoord, yCoord)) {
+			wordchoice1.flip();
+
+		}
+		if (wordchoice2.isInside(xCoord, yCoord)) {
+			wordchoice2.flip();
+		}
+		if (wordchoice3.isInside(xCoord, yCoord)) {
+			wordchoice3.flip();
+		}
+		if (wordchoice4.isInside(xCoord, yCoord)) {
+			wordchoice4.flip();
+		}
+		if (playAgain.isInside(xCoord, yCoord)) {
+			playAgain.flip();
+
+		}
+
+		if(helpMe.isInside(xCoord, yCoord)){
+			helpMe.flip();
+		}
+
+		repaint();
+	}
+	/**
+	 * Similarly to the mousePressed event this method simply get the coordinates of the user's click and registers when they stop
+	 * pressing on the button, meaning its released. it flips the color of the button, from lighter to darker to show the users
+	 * action, and then repaints the board to reflect this change. Each of the releases has it's own if statement so that only
+	 * that specific button is changed, but everything regardless of change is repainted at the end. 
+	 */
+	public void mouseReleased(MouseEvent event) {
+		xCoord = event.getX(); // gets the coordinates for when the mouse is
+		// released
+		yCoord = event.getY();
+
+		if (wordchoice1.isInside(xCoord, yCoord)) {
+			wordchoice1.flip();
+		}
+		if (wordchoice2.isInside(xCoord, yCoord)) {
+			wordchoice2.flip();
+		}
+		if (wordchoice3.isInside(xCoord, yCoord)) {
+			wordchoice3.flip();
+		}
+		if (wordchoice4.isInside(xCoord, yCoord)) {
+			wordchoice4.flip();
+		}
+		if (playAgain.isInside(xCoord, yCoord)) {
+			playAgain.flip();
+		}
+
+		if(helpMe.isInside(xCoord, yCoord)){
+			helpMe.flip();
+		}
+
+		repaint();
+	}
+	/**
+	 * The mouseClicked method is where all the actual work with the buttons get done.
+	 * the xCoord and yCoord is registered here as an event. It then decides if the coordinates are in
+	 * the predefined spaces of wordchoice1-4 or the help/next word button.
+	 */
+	public void mouseClicked(MouseEvent event) {
+
+		xCoord = event.getX();  //grabs the coordinates of the users click to determine which, if any button they clicked.
+		yCoord = event.getY();
+
+		if (wordchoice1.isInside(xCoord, yCoord)) { 
+			userChoice = wordchoice1;  //registered this as the user's choice
+			labelName = userChoice.getLabel();  //gets the label of the word for comparison
+			userAlert();  // makes sure the user doesn't attempt to answer again.
+			userResponse = true;
+
+		}
+		if (wordchoice2.isInside(xCoord, yCoord)) {
+			userChoice = wordchoice2;
+			labelName = userChoice.getLabel();
+			userAlert();
+
+		}
+		if (wordchoice3.isInside(xCoord, yCoord)) {
+			userChoice = wordchoice3;
+			labelName = userChoice.getLabel();
+			userAlert();
+
+		}
+		if (wordchoice4.isInside(xCoord, yCoord)) {
+			userChoice = wordchoice4;
+			labelName = userChoice.getLabel();
+			userAlert();
+
+		}
+		if (playAgain.isInside(xCoord, yCoord)) {  //the play again button for the user to pick a new word
+			choosingWords();  //sets up a new set of words, button colors and locations for the user to see
+			repaint();  // repaints the board
+
+
+		}
+
+		if(helpMe.isInside(xCoord, yCoord)){  //checks to see if the user's click was on the "help me" button
+			helpMe.action();  //calls the action button, and the action method in the alert button class to send a 
+			//instructional method to the user.
+		}
+
+
+	}
+
+	/**
+	 * This method does the actual comparing of the labels. It makes sure that labelName taken from the userGuess is the same
+	 * as the chosenCompliment of the english word. Since it is a boolean expression, it will only ever return true or false.
+	 * If they are equal it returns true. If the any of the other three words were chosen, it registers as false ( meaning an
+	 * incorrect guess)
+	 */
+	public boolean CompareTo() {
+		if (labelName.equals(chosenCompliment))
+			return true;
+		else
+			return false;
+
+	}
+	/**
+	 * the userAlert method registers if the userResponse is true or not. If true (meaning userResponse was true) then
+	 * it will tell them that they already answered this question, and asks them to try a different question. This ensures
+	 * that a user can't keep clicking the correct or incorrect value and improve or ruin their score.
+	 * 
+	 * The else if and the else statement are activated if the user hasn't picked a response yet. The else if activates
+	 * if the user is correct (CompareTo was true) and tells the user that their response was correct, and congradulates them.
+	 * It modulates the score by 1 and then sets the userResponse equal to true to prevent them from picking another response
+	 * lastly it will repaint the screen so that the game board reflects these changes.
+	 * 
+	 * The else statement is activated if compareTo was false, meaning the user got the question wrong. It tells them that 
+	 * they got it wrong, then gives the correct answer to the question. It will also set user response to true to prevent the user
+	 * from trying to answer the question again, and then mod the score by -1. The screen will then repaint to reflect the 
+	 * changes made by the user.
+	 */
+	public void userAlert() {
+		if(userResponse) {
+			JOptionPane.showMessageDialog(this,"You have already answered this question, why not try another?","Nope!",
+					JOptionPane.WARNING_MESSAGE);
+		}
+
+
+		else if (CompareTo()) {
+			JOptionPane.showMessageDialog(this,"Bon travail! Votre Reponse est correcte.", "Tres Bien!",
+					JOptionPane.WARNING_MESSAGE);
+			graph.scoreChange(1); // adds one point to the user's total score.
+			userResponse = true; // prevents the user from trying to answer the question again
+			repaint();
+
+		} else {
+			JOptionPane.showMessageDialog(this,"Continuez a essayer! Votre reponse n'est pas correcte."
+					+ "\n"
+					+ "Le reponse correcte est ' "+ chosenCompliment + " '.",
+					"C'est ne pas bien......", JOptionPane.WARNING_MESSAGE);
+			graph.scoreChange(-1); // subtracts a point from the user's total score
+			userResponse = true; // prevents the user from trying to answer the question again.
+			repaint();
+		}
+	}
+	/**
+	 * The paint method does all the actual painting in the game. Many of the methods will set methods which will be painted
+	 * or repainted but only the paint method will actually paint anything, as it is a good idea to separate the drawing and the 
+	 * actual painting of objects.
+	 * Here the buttons for the four word choices, english word choice, bar graph,
+	 *  and the next word and help buttons will paint on the screen
+	 */
+	public void paint(Graphics pane) {
+
+		wordchoice1.paint(pane);
+		wordchoice2.paint(pane);
+		wordchoice3.paint(pane);
+		wordchoice4.paint(pane);
+		guessChoice.paint(pane);
+		graph.paint(pane);
+		playAgain.paint(pane);
+		helpMe.paint(pane);
+
+
+	}
+}
