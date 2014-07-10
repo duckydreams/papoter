@@ -1,0 +1,66 @@
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collections;
+
+/**
+ * The words class creates two string variables the englishWords and frenchWords variables for use by their perspective
+ * getter and setter methods, so that the methods will never have to access the actual list of english and french words, but
+ * can instead use these getter and setter methods to choose and get the actual lists of words that the program will use.
+ * @author shannonmoocow
+ *
+ */
+public class Words {
+	protected String englishWords;
+	protected String frenchWords;
+
+	/**
+	 * This class sets up the variables of the englishWords and frenchWords for use in the Game class 
+	 * as the list that holds the actual french and english words is set to call the Words class.
+	 * Setting these variables becomes important when they are called upon in choosingWords class to get the words
+	 * so that they can be randomly selected by the program.
+	 * Separating the english and french words of the program makes it easier to handle, as the english and french words
+	 * are handled in completely different ways, in that the english words are used in a single button, and the french words
+	 * are handled as choices presented to the user.
+	 */
+	public Words( String english, String french){
+		englishWords = english;  //creates a variable to hold the english words
+		frenchWords = french;  // creates a variable to hold the french words
+
+
+	}
+	/**
+	 * The setEnglishWords method does little else but set an instance of the variable englishWords to englishWords,
+	 * this gives this instance of the variable a value of the words in the english part of the array.
+	 */
+	public void setEnglishWords(String englishWords){
+		this.englishWords = englishWords; // creates an instance of the variable englishWords, with the value englishWords
+	}
+	/**
+	 * The setFrenchWords method does the same thing as the setEnglishWords method with the set of french words given in the 
+	 * program. It sets an instance of the variable frenchWords to equal frenchWords, and receives the value of frenchWords
+	 * from the getFrenchWords method. It gives the instance of the variable the value of the words in the french part of the
+	 * array.
+	 * @param frenchWords
+	 */
+	public void setFrenchWords(String frenchWords){
+		this.frenchWords = frenchWords;// creates an instance of the variable frenchWords, with the value frenchWords
+	}
+	/**
+	 * The getEnglishWords method does little except return a list of englishWords which is received by the setEnglishWords
+	 * method, for use in other classes. This action of getting and setting the variables makes the use of private variables
+	 * possible in the program, so that the values can be accessed by different classes in the program.
+	 */
+	public String getEnglishWords(){
+		return englishWords;
+	}
+	/**
+	 * The getFrenchWords method does the exact same thing as the getEnglishWords, meaning it returns a list of frenchWords 
+	 * that is received and used by the setFrenchWords method, for use in other classes of the program. This action of getting
+	 * and setting the variables makes the use of private variables possible in the program so that the values of these variables
+	 * can be accessed in all the different classes of the program.
+	 * @return
+	 */
+	public String getFrenchWords(){
+		return frenchWords;
+	}
+}
