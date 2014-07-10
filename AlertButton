@@ -1,0 +1,90 @@
+import java.awt.Color;
+
+import javax.swing.JOptionPane;
+/**
+ * The AlertButton class is the inheritance in this program. It extends the Button (parent) class
+ * and instead of receiving user input for the game, assists the users in the playing of the game.
+ * It contains three methods, an action method, and a getter and a setter method. These methods will
+ * both get and set the message so that the "message" can be retrieved and accessed as the "message" is private 
+ */
+
+public class AlertButton extends Button { 
+
+	private String message;  // The name of the window popping up
+	private String instructions;  // the message the user will see on their screen
+	private boolean userResponse;
+
+	/**
+	 * This class sets the dimensions for the button with unnamed variables, none of the actual values
+	 * are set here, and are instead set in the the games class. The button class also uses blank 
+	 * values, that are customized in the games class, so that the buttons will all have separate colors,
+	 * names, values, and locations while all using the same basic button.
+	 */
+	public AlertButton(String someLabel, Color someColor, int someX, int someY, 
+			int someWidth, int someHeight) {
+		super(someLabel, someColor, someX, someY, someWidth, someHeight);
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * The action class sets the message and the instructions class and is the method that is called 
+	 * upon in the games class by the button clicked method. It is used by the helpMe button, and 
+	 * sets a message, and a set of instructions which are passed along in the getter and setter methods
+	 * below. The action class uses these two variables "message" and "instructions" to set up a
+	 * user message which will help the user play the game and send them instructions if needed.
+	 */
+
+	public void action() {  
+		message ="How to Play" ;
+		instructions = "Weclome to Le Premier Mots"
+				+ "\n"
+				+ "'Le Premier Mots' is a simple to use French Language Learning game for use in Eclipse IDE"
+				+ "\n"		
+				+"A word in english will be given to you in an orange box  "
+				+"\n"
+				+ "Below that will be four buttons, each one will be a different word in French"
+				+"\n"
+				+"One of these options will always be the correct translation of the english word given to you"
+				+"\n"
+				+"Simply choose the answer you think is correct, and the program will tell you if it is correct or not "
+				+"\n"
+				+"If you get it wrong, a point will be deducted, if you are correct a point will be added."
+				+ "\n"
+				+ "Blue bars denotes a positive score, pink denotes a negative score"
+				+ "\n"
+				+ "Want to play again? Simply click the next word button, and a new question will appear"
+				+ "\n"
+				+ "\n"
+				+ "It's as simple as un, deux, trois! Bon chance!";
+		JOptionPane.showMessageDialog(null, instructions, message,
+				JOptionPane.WARNING_MESSAGE);
+	}
+
+
+
+
+
+
+
+	/**
+	 * The getMessage() is the getter method which gets the "message" used by other methods, the getter
+	 * method is important for private variables like message, so that they are not being accessed 
+	 * directly which can be important so that users cannot change these variables. 
+	 * It works with the setter message to set the variable.
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+
+
+	/**
+	 * The setMessage variable receives the message, and sets an instance variable for message, so that
+	 * message is a unique message each time, which is where the "this" keyword should be used.
+	 * It "sets" this particular instance of message, for use in the action method.
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+}
