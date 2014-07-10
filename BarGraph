@@ -1,0 +1,95 @@
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+/**
+ * The BarGraph class draws the bar graph and keeps the score of the game. It sets the variable
+ * for the x and y coordinates of the graph (where its located on the screen) and the size of the 
+ * little rectangles that represent the score.
+ * It sets the score for 0 so that each player is equal when the game is started or reset. 
+
+ */
+public class BarGraph
+{
+
+	private int x = 300;
+
+	private int y = 300;
+
+	private int smallWidth = 10;
+
+
+	private int smallHeight = 25;
+
+
+	private int score = 0;
+
+
+	/**
+	 * The paint class will paint the line for the graph, and paint it based on the color. Negative for the left,
+	 * positive for the right, and the score is deducted 1 for a left victory, and added 1 for a right victory.
+	 * Based on the score (positive or negative) the method will choose where (what side) and what color the bars
+	 * it's Drawing should be. 
+
+	 */
+	public void paint(Graphics pane)
+	{
+		Graphics2D g =(Graphics2D) pane; 
+		g.setStroke(new BasicStroke(1));  // sets the stroke line to 1 for the lines of the bar graph
+
+		g.drawLine(x, y, x, (y + 40)); // middle starting line
+
+
+		if (score > 0)  //for positive scores
+		{
+			for (int i = 0; i < score; i++) 
+			{
+
+				pane.setColor(Color.cyan); 
+				drawRect(pane, x+(smallWidth*i), y+10);
+			}
+
+		}
+		else if (score < 0)  // for negative scores
+		{
+
+			for (int i = score; i < 0; i++)
+			{
+
+				pane.setColor(Color.pink);
+				drawRect(pane, x+(smallWidth*i), y+10);
+			}
+		}
+	}
+
+	/**
+	 * 
+	 *This method does very little, except make the score variable, meaning that other methods and classes
+	 * are able to use it and call it. 
+	 */
+	public void setScore(int someScore)
+	{
+		score = someScore; 
+	}
+
+	/**
+	 * This method draws the rectangle that is used for the small score bar. It receives coordinates so it
+	 * can be placed accordingly, and outlined in black. It will be pained and placed in the paint method, because
+	 * the color of the bar depends on the score of each of the users.
+	 */
+	private void drawRect(Graphics pane, int xRect, int yRect)
+	{
+		pane.fillRect(xRect, yRect, smallWidth, smallHeight);
+		pane.setColor(Color.black);
+		pane.drawRect(xRect, yRect, smallWidth, smallHeight);
+	}
+	/**
+	 * This method effectively changes the score to reflect how the game is progressing. 
+	 */
+	public void scoreChange(int someScore)
+	{
+
+		score = score + someScore; 
+	}
+}
