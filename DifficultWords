@@ -1,0 +1,36 @@
+
+public class DifficultWords extends LinkedList{
+/*This is the DifficultWords class, it holds a selection of all verbs that
+ * a person would need to know for holding a conversation in French. This class extends
+ * (is a child class) of LinkedList
+ * and is used in the Game class so if the user chooses to play an difficult version
+ * of the game the wordList is set to be a new instantiation of DifficultWords, with
+ * this list of words in it.
+ 
+ */
+	
+	public DifficultWords() {
+		for(Words words: arrayOf(
+						new Words("to go", "aller"),
+						new Words("to choose", "choisir"),
+						new Words("to sing", "chanter"),
+						new Words("to have", "devoir"),
+						new Words("to have", "avoir"),
+						new Words("to drink", "boire"),
+						new Words("to use","utiliser"),
+						new Words("to come", "venir"),
+						new Words("to say", "dire"),
+						new Words(" to want", "vouloir"),
+						new Words("to be", "etre"),
+						new Words("to see ", "regarder"),
+						new Words("to do","faire" ),
+						new Words("to buy","acheter"),
+						new Words("to love","aimer"),
+						new Words("to know","connaitre"),
+						new Words("to give","donner"))) 
+					
+			add(words);
+	}
+
+
+}
