@@ -1,0 +1,19 @@
+/* Our interface list just holds the following methods and nothing else.
+ * It is interfaced by LinkedList (which is in turn used to create List in the Game
+ * class that holds our linked list of words.
+ * 
+ * It has an add function (which returns nothing)
+ * boolean isEmpty (which only checks to see if you have anything in the list yes or no
+ * Words get( which gets the value of the Words for each Word words held in a specific node
+ * the set method receives i (used as a counter) and the Words words list, to assign a specific word
+ * to the value of whatever the current node is. 
+ * 
+ */
+public interface List {
+	
+	void add(Words words);
+	boolean isEmpty();
+	Words get(int i);
+	void set(int i, Words words);
+
+}
